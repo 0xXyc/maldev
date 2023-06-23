@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
     HANDLE processHandle;
     HANDLE threadHandle;
     PVOID remoteBuffer;
-    LPCSTR dllPath = "C:\\testcode\\hello-world-x64.dll";
+    LPCSTR dllPath = "C:\\Users\\Xyconix\\Desktop\\projects\\maldev\\dlls\\HelloWorld.dll";
     SIZE_T dllPathLength = strlen(dllPath) + 1;
     PTHREAD_START_ROUTINE threatStartRoutineAddress;
 
