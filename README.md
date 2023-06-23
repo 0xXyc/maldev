@@ -6,4 +6,6 @@ I'm still learning, so please let me know if you see anything I need to fix or w
 
 # To-do
 - Learning WinAPI
-- Process Injection
+- Process Hollowing
+- Reflective DLL injection (to avoid hitting disk)
+- PE backdooring
